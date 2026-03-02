@@ -1,6 +1,6 @@
 # CredEval / InsurEval — Investor Pitch Deck
 
-> **Live Site →** [https://YOUR-USERNAME.github.io/credeval-pitch](https://YOUR-USERNAME.github.io/credeval-pitch)
+> **Live Site →** https://fourcv.github.io/CredEval-InsurEval-/
 
 ---
 
@@ -60,7 +60,7 @@ This repo auto-deploys to GitHub Pages via GitHub Actions on every push to `main
 2. Go to **Settings → Pages**
 3. Set **Source** to `GitHub Actions`
 4. Push any change to `main` — deployment triggers automatically
-5. Your deck is live at `https://YOUR-USERNAME.github.io/REPO-NAME`
+5. Your deck is live at `https://fourcv.github.io/CredEval-InsurEval-/`
 
 ### Manual Deploy (No Actions)
 
@@ -75,7 +75,7 @@ This repo auto-deploys to GitHub Pages via GitHub Actions on every push to `main
 
 ```html
 <iframe
-  src="https://YOUR-USERNAME.github.io/credeval-pitch"
+  src="https://fourcv.github.io/CredEval-InsurEval-/"
   width="100%"
   height="100vh"
   style="border:none; width:100%; height:100vh; min-height:900px; display:block;"
