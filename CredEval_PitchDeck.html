@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CredEval | InsurEval — Investor Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --cream: #f5f0e8;
+    --gold: #c8a951;
+    --gold-light: #e8d28a;
+    --slate: #1e2535;
+    --mist: #8a9ab0;
+    --accent: #3d6b9e;
+    --red: #c04a2e;
+    --green: #2e7d52;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ink);
+    color: var(--cream);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,169,81,0.2);
+  }
+
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+  }
+  .nav-brand span { color: var(--cream); opacity: 0.5; }
+
+  .nav-slides {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(200,169,81,0.25);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+  }
+  .nav-dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+  }
+  .nav-dot:hover { background: rgba(200,169,81,0.6); }
+
+  .nav-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    background: none;
+    border: 1px solid rgba(200,169,81,0.3);
+    color: var(--gold);
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(200,169,81,0.1); border-color: var(--gold); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .slide-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+  }
+
+  /* SLIDES CONTAINER */
+  .deck {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    padding-top: 52px;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 52px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    padding: 40px;
+    overflow: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  /* SLIDE LAYOUTS */
+  .slide-inner {
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  /* ─── SLIDE 1: COVER ─── */
+  .s1-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(61,107,158,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,169,81,0.08) 0%, transparent 50%);
+  }
+  .s1-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(200,169,81,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(200,169,81,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .cover-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .cover-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--gold-light) 50%, var(--cream) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover-title-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3vw, 42px);
+    font-weight: 400;
+    color: var(--mist);
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+  .cover-divider {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 28px;
+    opacity: 0.6;
+  }
+  .cover-tagline {
+    font-size: 17px;
+    color: var(--cream);
+    opacity: 0.75;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .cover-pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 8px 20px;
+    border: 1px solid rgba(200,169,81,0.35);
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    background: rgba(200,169,81,0.06);
+  }
+
+  /* ─── SLIDE COMMON ─── */
+  .slide-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+  .slide-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 8px;
+    color: var(--cream);
+  }
+  .slide-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .slide-sub {
+    font-size: 15px;
+    color: var(--mist);
+    font-weight: 300;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 680px;
+  }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* CARD */
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,169,81,0.12);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+  .card-body {
+    font-size: 13.5px;
+    color: var(--mist);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* STAT BLOCK */
+  .stat-block {
+    text-align: center;
+    padding: 28px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,169,81,0.12);
+    border-radius: 8px;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+  }
+
+  /* QUOTE */
+  .quote-block {
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    background: rgba(200,169,81,0.04);
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+  }
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .quote-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+
+  /* PLATFORM SPLIT */
+  .platform-split {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0;
+    min-height: 300px;
+  }
+  .platform-divider {
+    background: linear-gradient(to bottom, transparent, rgba(200,169,81,0.4), transparent);
+  }
+  .platform-side {
+    padding: 28px;
+  }
+  .platform-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .badge-cred { background: rgba(61,107,158,0.2); color: #7ab0e0; border: 1px solid rgba(61,107,158,0.4); }
+  .badge-insur { background: rgba(200,169,81,0.12); color: var(--gold); border: 1px solid rgba(200,169,81,0.3); }
+
+  .user-list { list-style: none; margin-top: 12px; }
+  .user-list li {
+    padding: 7px 0;
+    font-size: 13.5px;
+    color: var(--mist);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .user-list li::before {
+    content: '→';
+    color: var(--gold);
+    font-size: 11px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  /* ROI TABLE */
+  .roi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+  .roi-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(200,169,81,0.2);
+    text-align: left;
+    font-weight: 400;
+  }
+  .roi-table td {
+    padding: 12px 16px;
+    font-size: 13.5px;
+    color: var(--mist);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .roi-table tr:hover td { background: rgba(200,169,81,0.03); }
+  .roi-table td:first-child { color: var(--cream); font-weight: 400; }
+  .highlight-val { color: var(--green); font-weight: 500; }
+  .old-val { color: rgba(192,74,46,0.8); text-decoration: line-through; font-size: 12px; }
+
+  /* REVENUE MODEL */
+  .rev-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 28px;
+  }
+  .rev-segment {
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    position: relative;
+  }
+  .rev-segment:first-child { border-radius: 8px 0 0 8px; }
+  .rev-segment:last-child { border-radius: 0 8px 8px 0; }
+  .rev-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 8px;
+  }
+  .rev-name { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--cream); margin-bottom: 6px; }
+  .rev-price { font-size: 24px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+  .rev-note { font-size: 12px; color: var(--mist); line-height: 1.5; }
+
+  /* MOAT */
+  .moat-item {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .moat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: rgba(200,169,81,0.2);
+    line-height: 1;
+    min-width: 48px;
+  }
+  .moat-text { flex: 1; }
+  .moat-title { font-size: 15px; font-weight: 500; color: var(--cream); margin-bottom: 4px; }
+  .moat-desc { font-size: 13px; color: var(--mist); line-height: 1.6; }
+
+  /* CTA SLIDE */
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .cta-card {
+    padding: 28px;
+    border: 1px solid rgba(200,169,81,0.2);
+    border-radius: 8px;
+    background: rgba(200,169,81,0.04);
+  }
+  .cta-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .cta-list { list-style: none; }
+  .cta-list li {
+    font-size: 13.5px;
+    color: var(--mist);
+    padding: 5px 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .cta-list li::before { content: '◆'; font-size: 7px; color: var(--gold); margin-top: 5px; flex-shrink: 0; }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    z-index: 200;
+  }
+
+  /* KEYBOARD HINT */
+  .kb-hint {
+    position: fixed;
+    bottom: 12px;
+    right: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(138,154,176,0.4);
+    letter-spacing: 0.08em;
+    z-index: 100;
+  }
+
+  /* SCROLLABLE CONTENT */
+  .slide-inner.scrollable { overflow-y: auto; max-height: calc(100vh - 130px); }
+
+  @media (max-width: 768px) {
+    .two-col, .three-col, .platform-split, .rev-track, .cta-grid { grid-template-columns: 1fr; }
+    .platform-divider { display: none; }
+    .slide { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">CredEval<span></span> / InsurEval</div>
+  <div class="nav-slides" id="navDots"></div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← PREV</button>
+    <span class="slide-counter" id="counter">01 / 09</span>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">NEXT →</button>
+  </div>
+</nav>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active" id="slide-0">
+    <div class="s1-bg"></div>
+    <div class="s1-grid"></div>
+    <div class="slide-inner" style="text-align:center; position:relative; z-index:2;">
+      <div class="cover-eyebrow">Investor Pitch Deck · 2026</div>
+      <div class="cover-title">CredEval</div>
+      <div class="cover-title">& InsurEval Platform</div>
+      <div class="cover-divider"></div>
+      <div class="cover-tagline">
+        Democratizing commercial real estate intelligence — delivering institutional-grade valuation, insurable value reporting, and portfolio monitoring to the 60% of CRE left behind.
+      </div>
+      <div class="cover-pills">
+        <div class="pill">CRE Valuation Intelligence</div>
+        <div class="pill">IQ Report · ~$350</div>
+        <div class="pill">USPAP-Aligned</div>
+        <div class="pill">Dual-Platform</div>
+        <div class="pill">Subscription + Transactional</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEM -->
+  <div class="slide" id="slide-1">
+    <div class="slide-inner">
+      <div class="slide-label">02 — The Market Problem</div>
+      <div class="slide-headline">The Bottom <em>60%</em> Has Been Ignored</div>
+      <div class="slide-sub">The commercial real estate market is bifurcated. Institutional-grade assets are over-served. Small and mid-sized CRE owners are left with no clear path to affordable, compliant valuation.</div>
+
+      <div class="three-col">
+        <div class="stat-block">
+          <div class="stat-num">60%</div>
+          <div class="stat-label">of CRE owned by non-institutional property owners — unmonitored, underserved</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">$25K+</div>
+          <div class="stat-label">Traditional annual appraisal cost — prohibitive for small property owners</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">Zero</div>
+          <div class="stat-label">standardized, affordable pathways to insurable value reporting for smaller CRE</div>
+        </div>
+      </div>
+
+      <div class="quote-block" style="margin-top:28px;">
+        <div class="quote-text">"Today you need a certified valuation for your insurable value. Who do I go to? Call an appraiser. What appraiser? I don't know. Go find one in your market. What's the scope? I don't know."</div>
+        <div class="quote-attr">— Benjamin Greenberg, CEO/Founder · DAC Session</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SOLUTION / DUAL PLATFORM -->
+  <div class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="slide-label">03 — The Solution</div>
+      <div class="slide-headline">Two Platforms. <em>One Ecosystem.</em></div>
+      <div class="slide-sub">A bifurcated architecture that serves both public marketplace users and institutional-grade operators — each with precisely the tools they need.</div>
+
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div class="platform-split">
+          <div class="platform-side">
+            <div class="platform-badge badge-cred">CredEval · Public Platform</div>
+            <div class="card-title">Property Intelligence Marketplace</div>
+            <div class="card-body" style="margin-bottom:12px;">The public-facing portal where property owners, buyers, and general clients order reports, access market data, and connect to institutional standards.</div>
+            <ul class="user-list">
+              <li>Commercial property owners</li>
+              <li>Buyers & sellers</li>
+              <li>General report ordering (IQ, BPO, Insurable Value)</li>
+              <li>Optional subscription model</li>
+              <li>Connect to institutional underwriting protocols</li>
+            </ul>
+          </div>
+          <div class="platform-divider"></div>
+          <div class="platform-side">
+            <div class="platform-badge badge-insur">InsurEval · Institutional Portal</div>
+            <div class="card-title">Underwriting Standards Dashboard</div>
+            <div class="card-body" style="margin-bottom:12px;">The institutional backend where brokers, underwriters, and financial institutions configure protocols, enforce compliance, and monitor portfolios at scale.</div>
+            <ul class="user-list">
+              <li>Insurance brokers & underwriters</li>
+              <li>Lenders & financial institutions</li>
+              <li>USPAP compliance configuration</li>
+              <li>Portfolio-level valuation monitoring</li>
+              <li>Standards enforcement & reporting protocols</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: IQ PRODUCT -->
+  <div class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="slide-label">04 — Core Product</div>
+      <div class="slide-headline">The <em>IQ Report:</em> Our Mission Product</div>
+      <div class="slide-sub">The democratized valuation tool built to serve the underserved majority — priced for access, designed for scale, and positioned as the intelligence layer beneath every institutional decision.</div>
+
+      <div class="two-col">
+        <div>
+          <div class="two-col" style="gap:12px; margin-bottom:20px;">
+            <div class="stat-block">
+              <div class="stat-num">~$350</div>
+              <div class="stat-label">IQ Report price point — accessible to any property owner</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-num">1 FTE</div>
+              <div class="stat-label">Needed to produce 2,000 reports — extraordinary operational leverage</div>
+            </div>
+          </div>
+          <div class="quote-block">
+            <div class="quote-text">"It's gonna be the most cost effective, most efficient report they've ever requested."</div>
+            <div class="quote-attr">— Benjamin Greenberg · DAC Session ~23:40</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="height:100%;">
+            <div class="card-label">IQ Report Bundles</div>
+            <ul class="user-list">
+              <li>Standalone one-time order via CredEval</li>
+              <li>Bundled with Insurable Value subscription</li>
+              <li>Free BPO report included with subscription tier</li>
+              <li>Signals for higher-tier appraisal conversion funnel</li>
+              <li>Market & demographic intelligence layer</li>
+              <li>Portfolio monitoring for lenders (ongoing access)</li>
+            </ul>
+            <div style="margin-top:16px; padding-top:16px; border-top: 1px solid rgba(200,169,81,0.12);">
+              <div class="card-label" style="margin-bottom:6px;">Strategic Positioning</div>
+              <div class="card-body">Does <strong style="color:var(--cream);">not replace</strong> appraisals — it adds low-cost, ongoing collateral intelligence between origination events.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: VALUE PROPS -->
+  <div class="slide" id="slide-4">
+    <div class="slide-inner scrollable">
+      <div class="slide-label">05 — Value Propositions</div>
+      <div class="slide-headline">ROI Across <em>All Three</em> Stakeholders</div>
+      <div class="slide-sub">Each audience segment receives a distinct, measurable value. No generic pitch — a precision argument for each decision-maker.</div>
+
+      <table class="roi-table">
+        <thead>
+          <tr>
+            <th>Stakeholder</th>
+            <th>Core Pain</th>
+            <th>CredEval/InsurEval Delivers</th>
+            <th>ROI Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Property Owners</td>
+            <td>No affordable, clear path to compliant valuation or insurable value</td>
+            <td>$350 IQ Report + optional Insurable Value subscription with bundled BPO</td>
+            <td class="highlight-val">$10K/5yr vs <span class="old-val">$25K/yr</span></td>
+          </tr>
+          <tr>
+            <td>Lenders & Banks</td>
+            <td>Blind spots between origination and renewal on small commercial loans</td>
+            <td>Continuous portfolio monitoring via IQ + Insurable Value subscription feeds</td>
+            <td class="highlight-val">Proactive risk mitigation + regulatory transparency</td>
+          </tr>
+          <tr>
+            <td>Insurance Underwriters</td>
+            <td>Data gaps, inconsistent submissions, manual intake</td>
+            <td>Structured data pushed directly in absorbable format; USPAP-aligned compliance</td>
+            <td class="highlight-val">Underwriter satisfaction → organic referral engine</td>
+          </tr>
+          <tr>
+            <td>Appraisers / Network</td>
+            <td>Inconsistent workflow, no scalable lead funnel</td>
+            <td>CredEval as the most incredible appraisal referral funnel — period</td>
+            <td class="highlight-val">Predictable lead flow at institutional volume</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="quote-block" style="margin-top:24px;">
+        <div class="quote-text">"Their underwriters are super happy because we're giving them the data, pushing it back to them in a way they can absorb it. And then they start promoting us to others because they love it."</div>
+        <div class="quote-attr">— Benjamin Greenberg · InsurEval Strategy Session</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: REVENUE MODEL -->
+  <div class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="slide-label">06 — Revenue Model</div>
+      <div class="slide-headline">Transactional Core, <em>Subscription Engine</em></div>
+      <div class="slide-sub">CredEval offers one-time reports or optional subscriptions. Subscriptions are not required — but they're where the compounding value and recurring revenue live.</div>
+
+      <div class="rev-track">
+        <div class="rev-segment" style="border: 1px solid rgba(200,169,81,0.1); border-right:none; border-radius:8px 0 0 8px;">
+          <div class="rev-type">Transactional</div>
+          <div class="rev-name">IQ Report</div>
+          <div class="rev-price">~$350</div>
+          <div class="rev-note">One-time, accessible, volume-driven. The entry door. Positions owner for higher-tier services.</div>
+        </div>
+        <div class="rev-segment" style="border: 1px solid rgba(200,169,81,0.2); background: rgba(200,169,81,0.04);">
+          <div class="rev-type">Subscription — Annual</div>
+          <div class="rev-name">Insurable Value + BPO Bundle</div>
+          <div class="rev-price">~$2K/yr</div>
+          <div class="rev-note">Insurable Value Report + free BPO bundled. Continuous monitoring. Lenders can require this at origination.</div>
+        </div>
+        <div class="rev-segment" style="border: 1px solid rgba(200,169,81,0.1); border-left:none; border-radius:0 8px 8px 0;">
+          <div class="rev-type">Institutional</div>
+          <div class="rev-name">InsurEval Portfolio Access</div>
+          <div class="rev-price">Enterprise</div>
+          <div class="rev-note">Lender/underwriter dashboard access. Portfolio-level IQ monitoring. Regulatory compliance tier.</div>
+        </div>
+      </div>
+
+      <div class="quote-block" style="margin-top:28px;">
+        <div class="quote-text">"Subscription usage is where we create huge value as an organization."</div>
+        <div class="quote-attr">— Benjamin Greenberg · DAC Session ~5:45</div>
+      </div>
+
+      <div class="card" style="margin-top:20px; padding:16px 24px; background: rgba(46,125,82,0.08); border-color: rgba(46,125,82,0.2);">
+        <div class="card-body"><strong style="color:var(--cream);">Regulatory Flywheel:</strong> Endorsements from regulators → lenders adopt IQ monitoring as standard → lenders require it at origination → subscription becomes non-optional for borrowers → compounding recurring revenue at institutional scale.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: COMPETITIVE MOAT -->
+  <div class="slide" id="slide-6">
+    <div class="slide-inner">
+      <div class="slide-label">07 — Competitive Moat</div>
+      <div class="slide-headline">Why This <em>Cannot Be Copied</em> Easily</div>
+      <div class="slide-sub">The combination of regulatory positioning, institutional data flows, and USPAP compliance creates layered defensibility that a standalone tech product cannot replicate.</div>
+
+      <div style="max-width:700px;">
+        <div class="moat-item">
+          <div class="moat-num">01</div>
+          <div class="moat-text">
+            <div class="moat-title">USPAP Standards Infrastructure</div>
+            <div class="moat-desc">InsurEval embeds institutional underwriting protocols and USPAP compliance directly into report generation — not a feature, a legal and standards architecture that creates switching costs.</div>
+          </div>
+        </div>
+        <div class="moat-item">
+          <div class="moat-num">02</div>
+          <div class="moat-text">
+            <div class="moat-title">Regulatory Endorsement Strategy</div>
+            <div class="moat-desc">Pursuing endorsements from regulatory bodies institutionalizes our valuation standards — enabling lenders to mandate subscription-based monitoring across their loan portfolios.</div>
+          </div>
+        </div>
+        <div class="moat-item">
+          <div class="moat-num">03</div>
+          <div class="moat-text">
+            <div class="moat-title">Dual-Sided Network Effects</div>
+            <div class="moat-desc">Underwriters configure InsurEval → CredEval users connect to those standards → data flows back to underwriters → satisfaction drives referrals. Each side makes the other more valuable.</div>
+          </div>
+        </div>
+        <div class="moat-item">
+          <div class="moat-num">04</div>
+          <div class="moat-text">
+            <div class="moat-title">Operational Leverage at Scale</div>
+            <div class="moat-desc">One analyst can generate 2,000 reports through the platform model. This isn't a services company wearing tech clothes — it's a true software-enabled production machine with extreme margins at volume.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: GO-TO-MARKET -->
+  <div class="slide" id="slide-7">
+    <div class="slide-inner">
+      <div class="slide-label">08 — Go-To-Market Strategy</div>
+      <div class="slide-headline">Three Entry Points, <em>One Flywheel</em></div>
+      <div class="slide-sub">Each channel feeds the next. Property owners generate data. Lenders demand monitoring. Underwriters refer. The flywheel compounds without heavy acquisition spend.</div>
+
+      <div class="three-col">
+        <div class="card">
+          <div class="card-label">Channel 1 · Direct</div>
+          <div class="card-title">Property Owners</div>
+          <div class="card-body">CredEval as the affordable entry point. $350 IQ Report drives initial volume. Content marketing around "what is my property worth" and "how do I get insurable value" — high-intent, low-competition search.</div>
+        </div>
+        <div class="card" style="border-color: rgba(200,169,81,0.3); background: rgba(200,169,81,0.04);">
+          <div class="card-label">Channel 2 · Institutional</div>
+          <div class="card-title">Lenders & Banks</div>
+          <div class="card-body">InsurEval as a risk tool. Position as "blind spot elimination for small commercial portfolios." Lenders who adopt IQ monitoring can require it at origination — creating mandatory demand from borrowers downstream.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Channel 3 · Referral</div>
+          <div class="card-title">Underwriters</div>
+          <div class="card-body">Data delivered in underwriter-ready format. When underwriters are delighted, they become the sales force — promoting CredEval to brokers and property owners organically. The best referral engine in the industry.</div>
+        </div>
+      </div>
+
+      <div class="quote-block" style="margin-top:24px;">
+        <div class="quote-text">"It's gonna be the most incredible funnel for appraisal work. Period."</div>
+        <div class="quote-attr">— Benjamin Greenberg · DAC Session ~8:11</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: CLOSE / ASK -->
+  <div class="slide" id="slide-8">
+    <div class="slide-inner">
+      <div class="slide-label">09 — The Ask</div>
+      <div class="slide-headline">Join the <em>Infrastructure Layer</em> for CRE Intelligence</div>
+      <div class="slide-sub">CredEval and InsurEval are not reports businesses. They are the standards and intelligence infrastructure for the 60% of commercial real estate that has never had a home.</div>
+
+      <div class="cta-grid">
+        <div class="cta-card">
+          <div class="cta-card-title">What We're Building</div>
+          <ul class="cta-list">
+            <li>Dual-platform CRE intelligence infrastructure</li>
+            <li>IQ Report at $350 — market-making price point</li>
+            <li>InsurEval institutional standards layer</li>
+            <li>Regulatory endorsement pipeline</li>
+            <li>Subscription recurring revenue model</li>
+          </ul>
+        </div>
+        <div class="cta-card">
+          <div class="cta-card-title">What We Need</div>
+          <ul class="cta-list">
+            <li>Growth capital for platform development</li>
+            <li>Regulatory relationship development</li>
+            <li>Sales team build-out for institutional channel</li>
+            <li>Data partnerships & MLS integrations</li>
+            <li>Marketing engine for CredEval public brand</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quote-block" style="margin-top:28px;">
+        <div class="quote-text">"CredEval is the public property intelligence and valuation ordering platform. That's perfect. That's exactly what the vision was from the beginning."</div>
+        <div class="quote-attr">— Benjamin Greenberg, CEO/Founder · DAC Session ~4:50</div>
+      </div>
+
+      <div style="text-align:center; margin-top:32px;">
+        <div style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em; color:var(--gold); opacity:0.7; text-transform:uppercase;">Benjamin Greenberg · CEO & Founder · CredEval / InsurEval</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<div class="kb-hint">← → arrow keys to navigate</div>
+
+<script>
+  let current = 0;
+  const totalSlides = 9;
+
+  function updateUI() {
+    // Update slides
+    document.querySelectorAll('.slide').forEach((s, i) => {
+      s.classList.remove('active', 'exit-left');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit-left');
+    });
+
+    // Counter
+    document.getElementById('counter').textContent =
+      String(current + 1).padStart(2,'0') + ' / ' + String(totalSlides).padStart(2,'0');
+
+    // Dots
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+
+    // Buttons
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === totalSlides - 1;
+
+    // Progress
+    document.getElementById('progress').style.width =
+      ((current + 1) / totalSlides * 100) + '%';
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < totalSlides) {
+      current = next;
+      updateUI();
+    }
+  }
+
+  // Build dots
+  const dotsEl = document.getElementById('navDots');
+  for (let i = 0; i < totalSlides; i++) {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.title = 'Slide ' + (i+1);
+    d.onclick = () => { current = i; updateUI(); };
+    dotsEl.appendChild(d);
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  // Touch/swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+    touchX = null;
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
